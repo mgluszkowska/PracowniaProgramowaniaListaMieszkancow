@@ -1,11 +1,15 @@
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 public class Main {
 
-    public static void main (String[] args) {
+    public static void main (String[] args) throws FileNotFoundException {
         String city, name, surname, number;
+
+        File myFile = new File("listamieszkancow.txt");
+        PrintWriter writeToFile = new PrintWriter("listamieszkancow.txt");
 
         Scanner console = new Scanner(System.in);
         //city = console.nextLine();
@@ -20,11 +24,10 @@ public class Main {
         number = console.next();
         //System.out.println(number);
 
-        System.out.println(isCorrect(number));
-
-        File myFile = new File("listamieszkancow.txt");
-        PrintWriter writeToFile = new PrintWriter("listamieszkancow.txt");
-        writeToFile.println(number);
+        if (isCorrect(number)) {
+            writeToFile.println(number);
+            writeToFile.close();
+        }
     }
 
     public static boolean isCorrect(String n) {
