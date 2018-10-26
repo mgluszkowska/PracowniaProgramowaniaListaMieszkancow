@@ -8,25 +8,28 @@ public class Main {
     public static void main (String[] args) throws FileNotFoundException {
         String city, name, surname, number;
 
+        //Tworze nowy plik z lista mieszkancow
         File myFile = new File("listamieszkancow.txt");
+        //Tworze obiekt, ktory bedzie pisal do tego pliku
         PrintWriter writeToFile = new PrintWriter("listamieszkancow.txt");
 
+        //Tworze skaner, ktory bedzie zczytywal dane z konsoli
         Scanner console = new Scanner(System.in);
-        //city = console.nextLine();
-        //System.out.println(city);
 
-        //name = console.next();
-        //System.out.println(name);
-
-        //surname = console.next();
-        //System.out.println(surname);
-
+        //Pobieram dane z konsoli
+        city = console.nextLine();
+        name = console.next();
+        surname = console.next();
         number = console.next();
-        //System.out.println(number);
 
         if (isCorrect(number)) {
-            writeToFile.println(number);
-            writeToFile.close();
+            //Tworze nowy obiekt typu Person
+            Person citizen = new Person(city, name, surname, number);
+            System.out.println("Nowa osoba: " + citizen.name + citizen.surname);
+            //Zapisuje dane do pliku
+//            System.out.println("Dane sa poprawne.");
+//            writeToFile.println(number);
+//            writeToFile.close();
         }
     }
 
