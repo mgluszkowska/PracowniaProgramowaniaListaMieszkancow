@@ -1,5 +1,10 @@
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.set.SetIterable;
+import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
+
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 
@@ -16,6 +21,8 @@ public class Main {
         //Tworze skaner, ktory bedzie zczytywal dane z konsoli
         Scanner console = new Scanner(System.in);
 
+        HashBagMultimap<String, Person> citiesToPeople = HashBagMultimap.newMultimap();
+
         //Pobieram dane z konsoli
         city = console.nextLine();
         name = console.next();
@@ -26,11 +33,33 @@ public class Main {
             //Tworze nowy obiekt typu Person
             Person citizen = new Person(city, name, surname, number);
             System.out.println("Nowa osoba: " + citizen.name + citizen.surname);
+
+            citiesToPeople.put(citizen.getCity(), citizen);
+
+
+
             //Zapisuje dane do pliku
 //            System.out.println("Dane sa poprawne.");
 //            writeToFile.println(number);
 //            writeToFile.close();
         }
+
+        //Ustalam klucze ???
+        SetIterable<String> keys = citiesToPeople.keySet();
+
+        //Tworze liste kluczy
+        MutableList<String> list = keys.toList();
+
+        //Sortuje liste wg kluczy (miast)
+        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+
+        //Wypisuje kazde miasto, a dla niego wszystkich mieszkancow
+        list.forEach(c -> {
+            System.out.println(c);
+            citiesToPeople.get(c).forEach(p -> {
+                System.out.println("\t" + p.getName() + " " + p.getSurname() + " " + p.getPesel());
+            });
+        });
     }
 
     public static boolean isCorrect(String n) {
