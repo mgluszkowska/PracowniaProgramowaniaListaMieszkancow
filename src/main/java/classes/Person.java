@@ -1,3 +1,5 @@
+package classes;
+
 public class Person {
     String city, name, surname, pesel;
 
