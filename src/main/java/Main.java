@@ -12,6 +12,7 @@ public class Main {
 
     public static void main (String[] args) throws FileNotFoundException {
         String city, name, surname, number;
+        Person[] people = new Person[100];
 
         //Tworze nowy plik z lista mieszkancow
         File myFile = new File("listamieszkancow.txt");
@@ -23,27 +24,28 @@ public class Main {
 
         HashBagMultimap<String, Person> citiesToPeople = HashBagMultimap.newMultimap();
 
-        //Pobieram dane z konsoli
-        city = console.nextLine();
-        name = console.next();
-        surname = console.next();
-        number = console.next();
+        for (int i=0; i<=1; i++) {
+            //Pobieram dane z konsoli
+            city = console.next();
+            name = console.next();
+            surname = console.next();
+            number = console.next();
 
-        if (isCorrect(number)) {
-            //Tworze nowy obiekt typu Person
-            Person citizen = new Person(city, name, surname, number);
-            System.out.println("Nowa osoba: " + citizen.name + citizen.surname);
-
-            citiesToPeople.put(citizen.getCity(), citizen);
+            //System.out.println(city);
 
 
+            if (isCorrect(number)) {
+                //Tworze nowy obiekt typu Person i wpisuje do tablicy people
+                people[i] = new Person(city, name, surname, number);
+                System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname);
 
-            //Zapisuje dane do pliku
+                citiesToPeople.put(people[i].getCity(), people[i]);
+                //Zapisuje dane do pliku
 //            System.out.println("Dane sa poprawne.");
 //            writeToFile.println(number);
 //            writeToFile.close();
+            }
         }
-
         //Ustalam klucze ???
         SetIterable<String> keys = citiesToPeople.keySet();
 
@@ -55,11 +57,12 @@ public class Main {
 
         //Wypisuje kazde miasto, a dla niego wszystkich mieszkancow
         list.forEach(c -> {
-            System.out.println(c);
+            writeToFile.println(c);
             citiesToPeople.get(c).forEach(p -> {
-                System.out.println("\t" + p.getName() + " " + p.getSurname() + " " + p.getPesel());
+                writeToFile.println("\t" + p.getName() + " " + p.getSurname() + " " + p.getPesel());
             });
         });
+        writeToFile.close();
     }
 
     public static boolean isCorrect(String n) {
