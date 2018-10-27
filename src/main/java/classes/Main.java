@@ -15,10 +15,14 @@ import java.util.Date;
 import java.util.Scanner;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import java.util.Calendar;
 
 public class Main {
 
     static HashBagMultimap<String, Person> citiesToPeople = HashBagMultimap.newMultimap();
+
+    //Tworze nowy plik z lista mieszkancow
+    File myFile = new File("odp.txt");
 
     public static HashBagMultimap<String, Person> getCitiesToPeople() {
         return citiesToPeople;
@@ -56,6 +60,11 @@ public class Main {
         //Tworze skaner, ktory bedzie zczytywal dane z konsoli
         Scanner console = new Scanner(System.in);
 
+        SimpleDateFormat form =
+                new SimpleDateFormat ("hh:mm:ss");
+
+        Calendar cal = Calendar.getInstance();
+
         int i = 0;
         while(true) {
             //Pobieram dane z konsoli
@@ -67,7 +76,7 @@ public class Main {
             if (isCorrect(number)) {
                 //Tworze nowy obiekt typu classes.Person i wpisuje do tablicy people
                 people[i] = new Person(city, name, surname, number);
-                System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname);
+                System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname + " " + form.format(cal.getTime()));
                 citiesToPeople.put(people[i].getCity(), people[i]);
             }
             i++;
@@ -113,8 +122,7 @@ public class Main {
         SimpleDateFormat form =
                 new SimpleDateFormat ("hh:mm:ss");
 
-        //Tworze nowy plik z lista mieszkancow
-        File myFile = new File("odp.txt");
+
         PrintWriter writeToFile = new PrintWriter("odp.txt");
 
         writeToFile.println("Update: " + form.format(logTime));
