@@ -1,40 +1,54 @@
 package classes;
 
-import classes.JobWriteToFile;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.set.SetIterable;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Scanner;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
-import classes.PeopleList;
 
 public class Main {
+
+    static HashBagMultimap<String, Person> citiesToPeople = HashBagMultimap.newMultimap();
+
+    public static HashBagMultimap<String, Person> getCitiesToPeople() {
+        return citiesToPeople;
+    }
 
     public static void main (String[] args) throws SchedulerException {
 
         Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 
-        scheduler.start();
-
         JobDetail job1 = newJob(JobWriteToFile.class)
                 .withIdentity("job1", "group1")
                 .build();
 
-        Trigger trigger = newTrigger()
-                .withIdentity("trigger1", "group1")
-                .startNow()
-                .withSchedule(simpleSchedule()
-                        .withIntervalInSeconds(30)
-                        .repeatForever())
-                .build();
+//        Trigger trigger = newTrigger()
+//                .withIdentity("trigger1", "group1")
+//                .startNow()
+//                .withSchedule(simpleSchedule()
+//                    .withIntervalInSeconds(30)
+//                    .repeatForever())
+//                .build();
+
+        TriggerBuilder triggerbuild = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startNow().withSchedule(simpleSchedule()
+                .withIntervalInSeconds(30)
+                .repeatForever());
+
+        Trigger trigger = triggerbuild.build();
 
         scheduler.scheduleJob(job1, trigger);
+
+        scheduler.start();
 
         String city, name, surname, number;
         Person[] people = new Person[1000];
@@ -54,12 +68,12 @@ public class Main {
                 //Tworze nowy obiekt typu classes.Person i wpisuje do tablicy people
                 people[i] = new Person(city, name, surname, number);
                 System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname);
-                PeopleList.getCitiesToPeople().put(people[i].getCity(), people[i]);
+                citiesToPeople.put(people[i].getCity(), people[i]);
             }
             i++;
         }
 
-        scheduler.shutdown();
+        //scheduler.shutdown();
     }
 
     public static boolean isCorrect(String n) {
@@ -88,8 +102,39 @@ public class Main {
             }
         }
 
+
     }
 
-    private static JobBuilder newTrigger() {
+//    private static JobBuilder newTrigger() {
+//    }
+
+    public static void writeToFile() throws FileNotFoundException {
+        Date logTime = new Date( );
+        SimpleDateFormat form =
+                new SimpleDateFormat ("hh:mm:ss");
+
+        //Tworze nowy plik z lista mieszkancow
+        File myFile = new File("odp.txt");
+        PrintWriter writeToFile = new PrintWriter("odp.txt");
+
+        writeToFile.println("Update: " + form.format(logTime));
+
+        //Ustalam klucze ???
+        SetIterable<String> keys = Main.getCitiesToPeople().keySet();
+
+        //Tworze liste kluczy
+        MutableList<String> list = keys.toList();
+
+        //Sortuje liste wg kluczy (miast)
+        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+
+        //Wypisuje kazde miasto, a dla niego wszystkich mieszkancow
+        list.forEach(c -> {
+            writeToFile.println(c);
+            citiesToPeople.get(c).forEach(p -> {
+                writeToFile.println("\t" + p.getName() + " " + p.getSurname() + " " + p.getPesel());
+            });
+        });
+        writeToFile.close();
     }
 }
