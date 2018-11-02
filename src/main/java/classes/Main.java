@@ -28,6 +28,16 @@ public class Main {
         return citiesToPeople;
     }
 
+//    static PrintWriter writeToFile;
+//
+//    {
+//        try {
+//            writeToFile = new PrintWriter("odp.txt");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     public static void main (String[] args) throws SchedulerException {
 
         Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
@@ -63,8 +73,6 @@ public class Main {
         SimpleDateFormat form =
                 new SimpleDateFormat ("hh:mm:ss");
 
-        Calendar cal = Calendar.getInstance();
-
         int i = 0;
         while(true) {
             //Pobieram dane z konsoli
@@ -76,6 +84,7 @@ public class Main {
             if (isCorrect(number)) {
                 //Tworze nowy obiekt typu classes.Person i wpisuje do tablicy people
                 people[i] = new Person(city, name, surname, number);
+                Calendar cal = Calendar.getInstance();
                 System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname + " " + form.format(cal.getTime()));
                 citiesToPeople.put(people[i].getCity(), people[i]);
             }
@@ -128,21 +137,31 @@ public class Main {
         writeToFile.println("Update: " + form.format(logTime));
 
         //Ustalam klucze ???
+
         SetIterable<String> keys = Main.getCitiesToPeople().keySet();
+        //writeToFile.println("Wyciagam klucze");
 
         //Tworze liste kluczy
         MutableList<String> list = keys.toList();
+        //writeToFile.println("Robie liste kluczy");
+
 
         //Sortuje liste wg kluczy (miast)
         Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+        //writeToFile.println("Sortuje");
+
 
         //Wypisuje kazde miasto, a dla niego wszystkich mieszkancow
+        //writeToFile.println("Bede wypisywal");
+
         list.forEach(c -> {
             writeToFile.println(c);
             citiesToPeople.get(c).forEach(p -> {
                 writeToFile.println("\t" + p.getName() + " " + p.getSurname() + " " + p.getPesel());
             });
         });
+        //writeToFile.println("Wypisalem");
+
         writeToFile.close();
     }
 }

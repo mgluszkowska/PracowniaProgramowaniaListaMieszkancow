@@ -22,15 +22,15 @@ public class JobWriteToFile implements org.quartz.Job {
 
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
-//        Date logTime = new Date( );
-//        SimpleDateFormat form =
-//                new SimpleDateFormat ("hh:mm:ss");
+        Date logTime = new Date( );
+        SimpleDateFormat form =
+                new SimpleDateFormat ("hh:mm:ss");
 //
 //        //Tworze nowy plik z lista mieszkancow
 //        File myFile = new File("odp.txt");
 //        PrintWriter writeToFile = new PrintWriter("odp.txt");
 //
-//        writeToFile.println("Update: " + form.format(logTime));
+        //writeToFile.println("Update: " + form.format(logTime));
 //
 //        //Ustalam klucze ???
 //        SetIterable<String> keys = Main.getCitiesToPeople().keySet();
@@ -49,6 +49,8 @@ public class JobWriteToFile implements org.quartz.Job {
 //            });
 //        });
 //        writeToFile.close();
+
+        System.out.println("Nowy zapis: " + form.format(logTime));
 
         try {
             writeToFile();
