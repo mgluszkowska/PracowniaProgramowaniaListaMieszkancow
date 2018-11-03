@@ -83,7 +83,7 @@ public class Main {
             if (isCorrect(number)) {
                 //Tworze nowy obiekt typu classes.Person i wpisuje do tablicy people
                 int index = findPesel(number);
-                System.out.println(index);
+                //System.out.println(index);
 
                 if(index < 0) {
                     people[i] = new Person(city, name, surname, number);
@@ -95,7 +95,7 @@ public class Main {
 //                    citiesToPeople.put(people[i].getCity(), people[i]);
                 }
                 else {
-                    System.out.println(people[index].name);
+                    //System.out.println(people[index].name);
                     people[index].city = city;
                     people[index].name = name;
                     people[index].surname = surname;
@@ -141,8 +141,6 @@ public class Main {
 
     }
 
-//    private static JobBuilder newTrigger() {
-//    }
 
     public static int findPesel(String pesel) {
         for (int i = 0; i < numberOfPeople; i++) {
@@ -158,8 +156,11 @@ public class Main {
         SimpleDateFormat form =
                 new SimpleDateFormat ("hh:mm:ss");
 
-        for (int i = 0; i <= people.length; i++) {
+        for (int i = 0; i < numberOfPeople; i++) {
+            //System.out.println("Liczba ludzi na liscie people: " + numberOfPeople);
+            citiesToPeople.clear();
             citiesToPeople.put(people[i].getCity(), people[i]);
+            System.out.println("Zapisalem do Multibag czlowieka o imieniu " + people[i].name);
         }
 
         PrintWriter writeToFile = new PrintWriter("odp.txt");
