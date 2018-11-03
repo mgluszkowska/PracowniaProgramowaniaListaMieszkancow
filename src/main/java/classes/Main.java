@@ -30,15 +30,11 @@ public class Main {
         return citiesToPeople;
     }
 
-//    static PrintWriter writeToFile;
-//
-//    {
-//        try {
-//            writeToFile = new PrintWriter("odp.txt");
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    static HashBagMultimap<String, Person> peselToPeople = HashBagMultimap.newMultimap();
+
+    static Person[] people = new Person[1000];
+
+    static int numberOfPeople = 0;
 
     public static void main (String[] args) throws SchedulerException {
 
@@ -51,14 +47,6 @@ public class Main {
         JobDetail job2 = newJob(JobCountdown.class)
                 .withIdentity("job2", "group2")
                 .build();
-
-//        Trigger trigger = newTrigger()
-//                .withIdentity("trigger1", "group1")
-//                .startNow()
-//                .withSchedule(simpleSchedule()
-//                    .withIntervalInSeconds(30)
-//                    .repeatForever())
-//                .build();
 
         TriggerBuilder triggerbuild = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startNow()
                 .withSchedule(cronSchedule("0/30 * * ? * *"));
@@ -76,7 +64,7 @@ public class Main {
         scheduler.start();
 
         String city, name, surname, number;
-        Person[] people = new Person[1000];
+
 
         //Tworze skaner, ktory bedzie zczytywal dane z konsoli
         Scanner console = new Scanner(System.in);
@@ -94,10 +82,26 @@ public class Main {
 
             if (isCorrect(number)) {
                 //Tworze nowy obiekt typu classes.Person i wpisuje do tablicy people
-                people[i] = new Person(city, name, surname, number);
-                Calendar cal = Calendar.getInstance();
-                System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname + " " + form.format(cal.getTime()));
-                citiesToPeople.put(people[i].getCity(), people[i]);
+                int index = findPesel(number);
+                System.out.println(index);
+
+                if(index < 0) {
+                    people[i] = new Person(city, name, surname, number);
+                    numberOfPeople++;
+
+                    System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname);
+//                    Calendar cal = Calendar.getInstance();
+//                    System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname + " " + form.format(cal.getTime()));
+//                    citiesToPeople.put(people[i].getCity(), people[i]);
+                }
+                else {
+                    System.out.println(people[index].name);
+                    people[index].city = city;
+                    people[index].name = name;
+                    people[index].surname = surname;
+                    System.out.println("Zmieniono dane osoby o numerze pesel: " + people[index].pesel + ": " + people[index].name +
+                            " " + people[index].surname);
+                }
             }
             else {
                 System.out.println("Bledny numer PESEL. Osoba nie zostanie zapisana do pliku.");
@@ -140,11 +144,23 @@ public class Main {
 //    private static JobBuilder newTrigger() {
 //    }
 
+    public static int findPesel(String pesel) {
+        for (int i = 0; i < numberOfPeople; i++) {
+            if (people[i].pesel.equals(pesel) ) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public static void writeToFile() throws FileNotFoundException {
         Date logTime = new Date( );
         SimpleDateFormat form =
                 new SimpleDateFormat ("hh:mm:ss");
 
+        for (int i = 0; i <= people.length; i++) {
+            citiesToPeople.put(people[i].getCity(), people[i]);
+        }
 
         PrintWriter writeToFile = new PrintWriter("odp.txt");
 

@@ -50,7 +50,7 @@ public class JobWriteToFile implements org.quartz.Job {
 //        });
 //        writeToFile.close();
 
-        System.out.println("Nowy zapis: " + form.format(logTime));
+       // System.out.println("Nowy zapis: " + form.format(logTime));
 
         try {
             writeToFile();
