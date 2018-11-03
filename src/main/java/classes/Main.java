@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Scanner;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import java.util.Calendar;
@@ -46,6 +48,10 @@ public class Main {
                 .withIdentity("job1", "group1")
                 .build();
 
+        JobDetail job2 = newJob(JobCountdown.class)
+                .withIdentity("job2", "group2")
+                .build();
+
 //        Trigger trigger = newTrigger()
 //                .withIdentity("trigger1", "group1")
 //                .startNow()
@@ -54,13 +60,18 @@ public class Main {
 //                    .repeatForever())
 //                .build();
 
-        TriggerBuilder triggerbuild = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startNow().withSchedule(simpleSchedule()
-                .withIntervalInSeconds(30)
-                .repeatForever());
+        TriggerBuilder triggerbuild = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startNow()
+                .withSchedule(cronSchedule("0/30 * * ? * *"));
 
         Trigger trigger = triggerbuild.build();
 
+        TriggerBuilder triggerbuild2 = TriggerBuilder.newTrigger().withIdentity("trigger2", "group2").startNow()
+                .withSchedule(cronSchedule("0 * * ? * *"));
+
+        Trigger trigger2 = triggerbuild2.build();
+
         scheduler.scheduleJob(job1, trigger);
+        scheduler.scheduleJob(job2, trigger2);
 
         scheduler.start();
 
@@ -87,6 +98,9 @@ public class Main {
                 Calendar cal = Calendar.getInstance();
                 System.out.println("Nowa osoba: " + people[i].name + " " + people[i].surname + " " + form.format(cal.getTime()));
                 citiesToPeople.put(people[i].getCity(), people[i]);
+            }
+            else {
+                System.out.println("Bledny numer PESEL. Osoba nie zostanie zapisana do pliku.");
             }
             i++;
         }
