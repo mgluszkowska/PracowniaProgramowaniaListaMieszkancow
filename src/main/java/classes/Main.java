@@ -160,7 +160,7 @@ public class Main {
             //System.out.println("Liczba ludzi na liscie people: " + numberOfPeople);
             citiesToPeople.clear();
             citiesToPeople.put(people[i].getCity(), people[i]);
-            System.out.println("Zapisalem do Multibag czlowieka o imieniu " + people[i].name);
+            //System.out.println("Zapisalem do Multibag czlowieka o imieniu " + people[i].name);
         }
 
         PrintWriter writeToFile = new PrintWriter("odp.txt");
