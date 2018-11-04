@@ -11,6 +11,11 @@ public class JobCountdown implements org.quartz.Job {
         LocalDateTime now = LocalDateTime.now();
         long minutes;
         minutes = Countdown.countMinutes(now);
-        System.out.println(minutes + " minut do końca przerwy/zajęć");
+        if (Countdown.isClass(now)) {
+            System.out.println(minutes + " minut do końca zajęć");
+        }
+        else {
+            System.out.println(minutes + " minut do końca przerwy");
+        }
     }
 }
