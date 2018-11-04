@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static java.time.LocalDate.now;
-
 public class Countdown {
 
     public static long countMinutes(LocalDateTime moment) {
@@ -15,7 +13,7 @@ public class Countdown {
         String day = moment.getDayOfWeek().name();
         LocalTime hour = moment.toLocalTime();
         LocalDate date = moment.toLocalDate();
-        LocalDateTime endDate;
+        LocalDateTime endDate = LocalDateTime.of(2018, 11, 5, 12, 0 );
 
         LocalTime[] endDates = new LocalTime[12];
         endDates[0] = LocalTime.of(8, 15);
@@ -41,16 +39,21 @@ public class Countdown {
 
         if (day.equals("FRIDAY")) {
             if (hour.isAfter(endDates[11])) {
-                endDate = LocalDateTime.of(date.plusDays(1), endDates[0]);
+                endDate = LocalDateTime.of(date.plusDays(3), endDates[0]);
             }
             else {
                 endDate = LocalDateTime.of(date, endDates[timeIndex]);
             }
         }
-        else if (day.equals("SATURDAY") || day.equals("SUNDAY")) {
+        else if (day.equals("SATURDAY")) {
+            endDate = LocalDateTime.of(date.plusDays(2), endDates[0]);
+        }
+        else if (day.equals("SUNDAY")) {
             endDate = LocalDateTime.of(date.plusDays(1), endDates[0]);
         }
-        else {
+        else if (day.equals("MONDAY") || day.equals("TUESDAY") || day.equals("WEDNESDAY")
+                || day.equals("THURSDAY"))
+        {
             if (hour.isAfter(endDates[11])) {
                 endDate = LocalDateTime.of(date.plusDays(1), endDates[0]);
             }
