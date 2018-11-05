@@ -17,6 +17,8 @@ public class JobWriteToFile implements org.quartz.Job {
         SimpleDateFormat form =
                 new SimpleDateFormat ("hh:mm:ss");
 
+        System.out.println("Zapisuje");
+
         try {
             writeToFile();
         } catch (FileNotFoundException e) {

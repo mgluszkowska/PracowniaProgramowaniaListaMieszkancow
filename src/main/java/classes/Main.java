@@ -5,6 +5,8 @@ import org.eclipse.collections.api.set.SetIterable;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Collections;
@@ -20,6 +22,7 @@ public class Main {
     }
     static Person[] people = new Person[1000];
     static int numberOfPeople = 0;
+    File myFile = new File("odp.txt");
 
     public static void main (String[] args) throws SchedulerException {
 
@@ -117,8 +120,9 @@ public class Main {
 
     public static void writeToFile() throws FileNotFoundException {
 
+        citiesToPeople.clear();
         for (int i = 0; i < numberOfPeople; i++) {
-            citiesToPeople.clear();
+
             citiesToPeople.put(people[i].getCity(), people[i]);
         }
 
@@ -134,6 +138,7 @@ public class Main {
         list.forEach(c -> {
             writeToFile.println(c);
             citiesToPeople.get(c).forEach(p -> {
+                System.out.println(p.getName());
                 writeToFile.println("\t" + p.getName() + " " + p.getSurname() + " " + p.getPesel());
             });
         });
